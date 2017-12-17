@@ -16,7 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from app01 import views
+from app01.views import pcgetcaptcha
 
+from app01.views import pcajax_validate
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -38,4 +40,13 @@ urlpatterns = [
     url(r'^login/', views.log_in),
     url(r'^logout/', views.log_out),
     url(r'^set_pwd/', views.set_pwd),
+
+    #验证码
+    url(r'^pc-geetest/register', pcgetcaptcha, name='pcgetcaptcha'),
+
+    url(r'^pc-geetest/ajax_validate',pcajax_validate, name='pcajax_validate'),
+
+
+
+
 ]

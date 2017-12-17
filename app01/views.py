@@ -1,8 +1,73 @@
 from django.shortcuts import render,HttpResponse,redirect
+
 from app01 import models
 from django.contrib import auth
 from django.contrib.auth.models import User
 # Create your views here.
+
+#滑动验证码
+from app01.geetest import GeetestLib
+import json
+pc_geetest_id = "b46d1900d0a894591916ea94ea91bd2c"
+pc_geetest_key = "36fc3fe98530eea08dfc6ce76e3d24c4"
+mobile_geetest_id = "7c25da6fe21944cfe507d2f9876775a9"
+mobile_geetest_key = "f5883f4ee3bd4fa8caec67941de1b903"
+
+
+#遮罩层
+
+#照搬照抄
+def pcgetcaptcha(request):
+    user_id = 'test'
+    gt = GeetestLib(pc_geetest_id, pc_geetest_key)
+    status = gt.pre_process(user_id)
+    request.session[gt.GT_STATUS_SESSION_KEY] = status
+    request.session["user_id"] = user_id
+    response_str = gt.get_response_str()
+    return HttpResponse(response_str)
+
+
+def pcajax_validate(request):
+    if request.method == "POST":
+        login_response = {"is_login": False, "error_msg": None}
+        #  验证验证码
+        gt = GeetestLib(pc_geetest_id, pc_geetest_key)
+        challenge = request.POST.get(gt.FN_CHALLENGE, '')
+        validate = request.POST.get(gt.FN_VALIDATE, '')
+        seccode = request.POST.get(gt.FN_SECCODE, '')
+        status = request.session[gt.GT_STATUS_SESSION_KEY]
+        user_id = request.session["user_id"]
+        if status:
+            result = gt.success_validate(challenge, validate, seccode, user_id)
+        else:
+            result = gt.failback_validate(challenge, validate, seccode)
+        # 自己扩充 验证用户名密码
+        if result:
+            username = request.POST.get("username")
+            password = request.POST.get("password")
+            print(username,password)
+
+            user = auth.authenticate(username=username, password=password)
+            if user:
+                login_response["is_login"] = True
+                auth.login(request, user)
+
+            else:
+                login_response["error_msg"] = "username or password error"
+
+        else:
+            login_response["error_msg"]="验证码错误"
+
+        return HttpResponse(json.dumps(login_response))
+
+
+
+
+
+
+
+
+
 
 def index(request):
     if not request.user.is_authenticated():
@@ -215,16 +280,16 @@ def reg(request):
 
 
 def log_in(request):
-    if request.method=='POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = auth.authenticate(username=username, password=password)
-        if user:
-            auth.login(request, user)
-            return redirect("/index/")
-        else:
-            info = "用户名或密码错误"
-            return render(request, "login.html", {"info": info})
+    # if request.method=='POST':
+    #     username = request.POST.get('username')
+    #     password = request.POST.get('password')
+    #     user = auth.authenticate(username=username, password=password)
+    #     if user:
+    #         auth.login(request, user)
+    #         return redirect("/index/")
+    #     else:
+    #         info = "用户名或密码错误"
+    #         return render(request, "login.html", {"info": info})
     return render(request,'login.html')
 
 
