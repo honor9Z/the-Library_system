@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}login{% endblock %}</title>
+            <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <style>
+        h3{
+            color: red;
+        }
+        .container{
+            padding-top: 100px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% block form %}
+                <h2 class="text-center">登录页面</h2>
+            <h3>{{ info }}</h3>
+            <form class="form-horizontal" action="/login/" method="post">
+                {% csrf_token %}
+    <div class="form-group" >
+
+        <label for="inputusername3" class="col-sm-2 control-label">username</label>
+        <div class="col-sm-10">
+            <input name="username" type="text" class="form-control" id="inputusername3" placeholder="username">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+        <div class="col-sm-10">
+            <input name="password" type="password" class="form-control" id="inputPassword3" placeholder="Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> Remember me
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" class="btn btn-primary" value="&nbsp;&nbsp;登录&nbsp;&nbsp;">
+            <div><a href="/reg/">没有账号？点我注册>>>></a></div>
+        </div>
+    </div>
+
+
+</form>
+            {% endblock form %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

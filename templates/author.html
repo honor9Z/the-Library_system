@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+{% block title %}author{% endblock %}
+{% block table %}
+    <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>age</th>
+                        <th>operating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for author_obj in authorlist %}
+                             <tr>
+                                   <td>{{ author_obj.name }}</td>
+                                   <td>{{ author_obj.age }}</td>
+
+                                   <td>
+                                       <a href="/delauthor/{{ author_obj.id }}"><button class="btn btn-danger">删除</button></a>
+                                       <a href="/editauthor/?author_id={{ author_obj.id }}"><button class="btn btn-info">编辑</button></a>
+                                   </td>
+
+                               </tr>
+                      {% endfor %}
+                </tbody>
+
+
+
+            </table>
+
+
+
+{% endblock table %}
+
+
+
+
+

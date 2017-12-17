@@ -1,0 +1,41 @@
+{% extends 'index.html' %}
+{% block title %}book{% endblock %}
+{% block table %}
+    <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>title</th>
+                        <th>author</th>
+                        <th>price</th>
+                        <th>pubdate</th>
+                        <th>publish_id</th>
+                        <th>operating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book_obj in booklist %}
+                             <tr>
+                                   <td>{{ book_obj.title }}</td>
+                                   <td>
+                                       {% for author in book_obj.authorlist.all %}
+                                           {{ author.name }}
+                                       {% endfor %}
+                                   </td>
+                                   <td>{{ book_obj.price }}</td>
+                                   <td>{{ book_obj.publish_date|date:"Y-m-d" }}</td>
+                                   <td>
+                                       {{ book_obj.publish.name }}
+                                   </td>
+                                   <td>
+                                       <a href="/delbook/{{ book_obj.nid }}"><button class="btn btn-danger">删除</button></a>
+                                       <a href="/edit/?book_id={{ book_obj.nid }}"><button class="btn btn-info">编辑</button></a>
+                                   </td>
+
+                               </tr>
+                      {% endfor %}
+                </tbody>
+
+
+
+            </table>
+{% endblock table %}
